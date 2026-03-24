@@ -1,0 +1,113 @@
+---
+const cases = [
+  {
+    quote: 'From zero to monitoring all my servers in under 10 minutes.',
+    who: 'Solo developer running 6 VPS nodes',
+    tag: 'Quick setup',
+    tagColor: 'cyan',
+  },
+  {
+    quote: 'Finally found the root cause of that 3am crash — disk + a memory leak — without SSH-ing into anything.',
+    who: 'Backend engineer, production debugging',
+    tag: 'Root cause analysis',
+    tagColor: 'violet',
+  },
+  {
+    quote: 'Our Slack alert fired before the on-call engineer even noticed. Downtime went from 20min to 3min.',
+    who: 'DevOps team, 12-server fleet',
+    tag: 'Alerting',
+    tagColor: 'cyan',
+  },
+  {
+    quote: 'Replaced Datadog entirely. Same visibility, zero monthly bill.',
+    who: 'Startup CTO, self-hosted stack',
+    tag: 'Cost saving',
+    tagColor: 'violet',
+  },
+];
+---
+
+<section class="section" id="use-cases">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="section-label">Use cases</p>
+      <h2 class="section-title">Built for real problems</h2>
+    </div>
+
+    <div class="cases-grid">
+      {cases.map(c => (
+        <div class="case-card">
+          <span class={`case-tag tag-${c.tagColor}`}>{c.tag}</span>
+          <blockquote class="case-quote">"{c.quote}"</blockquote>
+          <p class="case-who">— {c.who}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+.section-head {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.case-card {
+  background: var(--bg-card);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+.case-card:hover {
+  border-color: rgba(0,180,200,0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.case-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 1.1rem;
+}
+.tag-cyan {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid rgba(0,180,200,0.2);
+}
+.tag-violet {
+  background: var(--violet-soft);
+  color: var(--violet);
+  border: 1px solid rgba(124,111,235,0.2);
+}
+
+.case-quote {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.case-who {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 700px) {
+  .cases-grid { grid-template-columns: 1fr; }
+}
+</style>

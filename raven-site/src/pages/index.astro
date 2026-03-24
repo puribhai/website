@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import QuickStart from '../components/QuickStart.astro';
+import UseCases from '../components/UseCases.astro';
+import CtaFooter from '../components/CtaFooter.astro';
+---
+
+<BaseLayout
+  title="Raven — Self-hosted Monitoring & Logging"
+  description="Lightweight, self-hosted monitoring platform. Real-time metrics, centralized logs, and smart alerts — all in one dashboard."
+>
+  <Navbar />
+  <main>
+    <Hero />
+    <Features />
+    <HowItWorks />
+    <QuickStart />
+    <UseCases />
+  </main>
+  <CtaFooter />
+</BaseLayout>

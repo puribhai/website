@@ -1,0 +1,271 @@
+---
+---
+
+<section class="section" id="quickstart">
+  <div class="container qs-wrap">
+
+    <div class="qs-text">
+      <p class="section-label">Quick Start</p>
+      <h2 class="section-title">Zero to monitoring<br/>in under 5 minutes</h2>
+      <p class="section-subtitle">
+        Raven ships as a single Docker Compose file. One command spins up the server, database, and UI.
+      </p>
+
+      <ul class="check-list">
+        <li><span class="check-icon">✓</span> No cloud account needed</li>
+        <li><span class="check-icon">✓</span> No telemetry or phoning home</li>
+        <li><span class="check-icon">✓</span> Your data stays on your infrastructure</li>
+        <li><span class="check-icon">✓</span> Runs on any Linux host with Docker</li>
+      </ul>
+
+      <a href="/docs" class="qs-cta">
+        Read the full setup guide
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="qs-terminal">
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button class="tab active" role="tab" data-tab="docker" aria-selected="true">Docker Compose</button>
+        <button class="tab" role="tab" data-tab="manual" aria-selected="false">Manual</button>
+      </div>
+
+      <!-- Docker tab -->
+      <div class="tab-panel active" id="tab-docker">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" data-code="docker-cmd" aria-label="Copy code">
+              <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre id="docker-cmd"><code><span class="c-muted"># Clone and start Raven</span>
+git clone https://github.com/your-org/raven
+cd raven
+
+<span class="c-muted"># Configure environment</span>
+cp .env.example .env
+
+<span class="c-muted"># Start all services</span>
+docker compose up -d
+
+<span class="c-muted"># Open the dashboard</span>
+open http://localhost:3000</code></pre>
+        </div>
+      </div>
+
+      <!-- Manual tab -->
+      <div class="tab-panel" id="tab-manual" hidden>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" data-code="manual-cmd" aria-label="Copy code">
+              <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre id="manual-cmd"><code><span class="c-muted"># Build server from source</span>
+cargo build --release -p raven-server
+
+<span class="c-muted"># Install the agent on each server</span>
+curl -sSL https://get.ravenmon.io | sh
+
+<span class="c-muted"># Configure agent</span>
+raven-agent --server https://your-host:443 \
+  --token YOUR_TOKEN</code></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.qs-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.qs-text .section-subtitle {
+  margin-top: 0.75rem;
+  max-width: 400px;
+}
+
+.check-list {
+  list-style: none;
+  margin: 1.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.check-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.check-icon {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.qs-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  transition: gap 0.2s;
+}
+.qs-cta:hover { gap: 0.65rem; }
+
+/* ── Terminal/code area ── */
+.qs-terminal {
+  background: var(--bg-card);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: var(--border);
+  background: var(--bg-elevated);
+}
+
+.tab {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab:hover { color: var(--text-secondary); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.code-block {
+  position: relative;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1.25rem;
+  border-bottom: var(--border);
+  background: rgba(0,0,0,0.2);
+}
+
+.code-lang {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: var(--border);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.copy-btn:hover {
+  color: var(--accent);
+  border-color: rgba(0,180,200,0.35);
+}
+.copy-btn.copied {
+  color: var(--success);
+  border-color: rgba(61,219,192,0.35);
+}
+
+pre {
+  padding: 1.5rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.85;
+  overflow-x: auto;
+  margin: 0;
+}
+pre code { background: none; border: none; padding: 0; color: var(--text-primary); font-size: inherit; }
+
+.c-muted { color: var(--text-muted); }
+
+@media (max-width: 900px) {
+  .qs-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+  .qs-text .section-subtitle { max-width: 100%; }
+}
+</style>
+
+<script>
+// Tabs
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const targetId = (tab as HTMLElement).dataset.tab!;
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => {
+      p.classList.remove('active');
+      (p as HTMLElement).hidden = true;
+    });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    const panel = document.getElementById(`tab-${targetId}`)!;
+    panel.classList.add('active');
+    panel.hidden = false;
+  });
+});
+
+// Copy buttons
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const id = (btn as HTMLElement).dataset.code!;
+    const text = document.getElementById(id)?.innerText ?? '';
+    await navigator.clipboard.writeText(text);
+    btn.classList.add('copied');
+    const span = btn.querySelector('span')!;
+    const iconCopy = btn.querySelector('.icon-copy') as HTMLElement;
+    const iconCheck = btn.querySelector('.icon-check') as HTMLElement;
+    span.textContent = 'Copied!';
+    iconCopy.style.display = 'none';
+    iconCheck.style.display = 'block';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      span.textContent = 'Copy';
+      iconCopy.style.display = 'block';
+      iconCheck.style.display = 'none';
+    }, 2000);
+  });
+});
+</script>

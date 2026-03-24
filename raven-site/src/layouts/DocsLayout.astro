@@ -1,0 +1,529 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '../components/astro/Navbar.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  currentPath?: string;
+}
+
+const { title, description, currentPath = Astro.url.pathname } = Astro.props;
+
+const sidebarNav = [
+  {
+    group: 'Getting Started',
+    items: [
+      { label: 'Introduction',  href: '/docs' },
+      { label: 'Installation',  href: '/docs/installation' },
+      { label: 'Quick Start',   href: '/docs/quickstart' },
+      { label: 'Configuration', href: '/docs/configuration' },
+    ],
+  },
+  {
+    group: 'Core Concepts',
+    items: [
+      { label: 'Architecture',  href: '/docs/architecture' },
+      { label: 'Agent',         href: '/docs/agent' },
+      { label: 'Server',        href: '/docs/server' },
+      { label: 'Transports',    href: '/docs/transports' },
+    ],
+  },
+  {
+    group: 'Alerting',
+    items: [
+      { label: 'Alert Rules',   href: '/docs/alerts' },
+      { label: 'Discord',       href: '/docs/alerts/discord' },
+      { label: 'Slack',         href: '/docs/alerts/slack' },
+      { label: 'Email (SMTP)',  href: '/docs/alerts/email' },
+    ],
+  },
+  {
+    group: 'Reference',
+    items: [
+      { label: 'API Reference', href: '/docs/api' },
+      { label: 'Spec',          href: '/docs/spec' },
+      { label: 'Changelog',     href: '/docs/changelog' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={`${title} — Raven Docs`} description={description}>
+  <Navbar />
+
+  <div class="docs-layout">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar" id="docs-sidebar">
+
+      <!-- Search -->
+      <div class="docs-search">
+        <label class="search-wrap" for="docs-search-input">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            id="docs-search-input"
+            type="search"
+            placeholder="Search docs..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search documentation"
+          />
+          <kbd>⌘K</kbd>
+        </label>
+      </div>
+
+      <!-- Nav -->
+      <nav class="sidebar-nav" aria-label="Documentation navigation">
+        {sidebarNav.map(group => (
+          <div class="nav-group">
+            <p class="nav-group-label">{group.group}</p>
+            <ul role="list">
+              {group.items.map(item => {
+                const isActive = currentPath === item.href || currentPath.startsWith(item.href + '/');
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      class={`nav-item ${isActive ? 'active' : ''}`}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+    </aside>
+
+    <!-- Main content -->
+    <main class="docs-main" id="docs-main">
+
+      <!-- Breadcrumb + edit -->
+      <div class="docs-topbar">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/docs" class="bc-link">Docs</a>
+          <span class="bc-sep" aria-hidden="true">/</span>
+          <span class="bc-current" aria-current="page">{title}</span>
+        </nav>
+        <a href="https://github.com" class="edit-link" target="_blank" rel="noopener" aria-label="Edit this page on GitHub">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit on GitHub
+        </a>
+      </div>
+
+      <!-- Article -->
+      <article class="docs-content prose">
+        <h1 class="docs-page-title">{title}</h1>
+        <slot />
+      </article>
+
+      <!-- Prev/Next nav -->
+      <div class="docs-pagination">
+        <slot name="prev" />
+        <slot name="next" />
+      </div>
+
+    </main>
+
+    <!-- On-page TOC (right rail) -->
+    <aside class="docs-toc" id="docs-toc" aria-label="On this page">
+      <p class="toc-label">On this page</p>
+      <nav id="toc-nav" aria-label="Table of contents">
+        <!-- Populated by JS -->
+      </nav>
+    </aside>
+
+  </div>
+
+  <!-- Mobile sidebar toggle -->
+  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+</BaseLayout>
+
+<style>
+/* ── Layout ── */
+.docs-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 220px;
+  min-height: calc(100vh - 68px);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Sidebar ── */
+.docs-sidebar {
+  position: sticky;
+  top: 68px;
+  height: calc(100vh - 68px);
+  overflow-y: auto;
+  border-right: var(--border);
+  background: var(--bg-card);
+  padding: 1.5rem 0 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-border) transparent;
+}
+
+.docs-search {
+  padding: 0 1.25rem 1.25rem;
+  border-bottom: var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-elevated);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  cursor: text;
+  transition: border-color 0.2s;
+}
+.search-wrap:focus-within {
+  border-color: rgba(0,180,200,0.4);
+  box-shadow: 0 0 0 3px rgba(0,180,200,0.08);
+}
+.search-wrap svg { color: var(--text-muted); flex-shrink: 0; }
+
+#docs-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  min-width: 0;
+}
+#docs-search-input::placeholder { color: var(--text-muted); }
+
+kbd {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: var(--bg-border);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+/* ── Nav ── */
+.sidebar-nav { padding: 0 0.75rem; }
+
+.nav-group { margin-bottom: 1.75rem; }
+
+.nav-group-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.nav-group ul { list-style: none; }
+
+.nav-item {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  margin-bottom: 1px;
+}
+.nav-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+.nav-item.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 500;
+}
+
+/* ── Main content ── */
+.docs-main {
+  padding: 2rem 3rem;
+  min-width: 0;
+  max-width: 780px;
+}
+
+.docs-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: var(--border);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.bc-link {
+  color: var(--text-secondary);
+  transition: color 0.15s;
+}
+.bc-link:hover { color: var(--accent); }
+.bc-sep { color: var(--text-muted); }
+.bc-current { color: var(--text-primary); }
+
+.edit-link {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+.edit-link:hover { color: var(--accent); }
+
+.docs-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+/* ── Prose styles ── */
+.prose {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+.prose h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-top: 2.5rem;
+  border-top: var(--border);
+  letter-spacing: -0.01em;
+}
+.prose h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.prose p { margin-bottom: 1.1rem; }
+.prose ul, .prose ol {
+  margin: 0.5rem 0 1.1rem 1.25rem;
+}
+.prose li { margin-bottom: 0.3rem; }
+.prose strong { color: var(--text-primary); font-weight: 600; }
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: rgba(0,180,200,0.3);
+  transition: text-decoration-color 0.2s;
+}
+.prose a:hover { text-decoration-color: var(--accent); }
+
+/* ── Code blocks in prose ── */
+.prose pre {
+  background: var(--bg-card);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.8;
+  position: relative;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-primary);
+  font-size: inherit;
+}
+
+/* ── Pagination ── */
+.docs-pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: var(--border);
+  gap: 1rem;
+}
+
+/* ── TOC ── */
+.docs-toc {
+  position: sticky;
+  top: 68px;
+  height: calc(100vh - 68px);
+  overflow-y: auto;
+  padding: 2rem 1.5rem;
+  border-left: var(--border);
+  scrollbar-width: thin;
+}
+
+.toc-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+#toc-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+#toc-nav a {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  border-left: 2px solid transparent;
+}
+#toc-nav a:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+#toc-nav a.toc-active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+#toc-nav a.toc-h3 { padding-left: 1.25rem; }
+
+/* ── Mobile sidebar toggle ── */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  width: 44px; height: 44px;
+  background: var(--accent);
+  color: #001417;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--accent-glow-sm);
+}
+
+@media (max-width: 1200px) {
+  .docs-layout { grid-template-columns: 240px 1fr; }
+  .docs-toc { display: none; }
+}
+
+@media (max-width: 768px) {
+  .docs-layout { grid-template-columns: 1fr; }
+  .docs-sidebar {
+    position: fixed;
+    top: 68px; left: 0;
+    width: 280px;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    height: calc(100vh - 68px);
+  }
+  .docs-sidebar.open { transform: translateX(0); }
+  .docs-main { padding: 1.5rem 1.25rem; }
+  .sidebar-toggle { display: flex; }
+}
+</style>
+
+<script>
+// Mobile sidebar
+const toggle = document.getElementById('sidebar-toggle')!;
+const sidebar = document.querySelector('.docs-sidebar') as HTMLElement;
+
+toggle?.addEventListener('click', () => {
+  const isOpen = sidebar.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', String(isOpen));
+});
+
+// Click outside to close
+document.addEventListener('click', (e) => {
+  if (sidebar?.classList.contains('open') &&
+      !sidebar.contains(e.target as Node) &&
+      e.target !== toggle) {
+    sidebar.classList.remove('open');
+    toggle?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+// Build TOC from headings in main content
+const tocNav = document.getElementById('toc-nav');
+if (tocNav) {
+  const headings = document.querySelectorAll('.docs-content h2, .docs-content h3');
+  headings.forEach((h) => {
+    if (!h.id) {
+      h.id = h.textContent!.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+    }
+    const a = document.createElement('a');
+    a.href = `#${h.id}`;
+    a.textContent = h.textContent;
+    a.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    tocNav.appendChild(a);
+  });
+
+  // Highlight active heading on scroll
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = tocNav.querySelector(`a[href="#${id}"]`);
+        if (link) {
+          link.classList.toggle('toc-active', entry.isIntersecting);
+        }
+      });
+    },
+    { rootMargin: '-68px 0px -80% 0px' }
+  );
+  headings.forEach(h => observer.observe(h));
+}
+
+// Keyboard shortcut for search
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('docs-search-input')?.focus();
+  }
+});
+
+// Simple client-side search (highlights + scrolls to first match)
+const searchInput = document.getElementById('docs-search-input') as HTMLInputElement;
+const navItems = document.querySelectorAll<HTMLAnchorElement>('.nav-item');
+
+searchInput?.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  navItems.forEach(item => {
+    const match = item.textContent!.toLowerCase().includes(q);
+    (item as HTMLElement).style.display = (!q || match) ? '' : 'none';
+  });
+});
+</script>
