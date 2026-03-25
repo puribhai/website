@@ -30,7 +30,10 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="footer-logo">Raven</span>
+      <a href="/" class="footer-logo" aria-label="Raven home">
+        <img src="/raven-icon.svg" width="28" height="28" alt="Raven logo" />
+        <span>Raven</span>
+      </a>
       <span class="footer-tagline">Observe everything. Own your data.</span>
     </div>
 
@@ -160,9 +163,10 @@
   gap: 0.25rem;
 }
 .footer-logo {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--text-primary);
+  display: flex;
+  align-items: center;   /* fixes vertical alignment */
+  gap: 8px;              /* clean spacing */
+  font-weight: 600;
 }
 .footer-tagline {
   font-size: 0.78rem;
